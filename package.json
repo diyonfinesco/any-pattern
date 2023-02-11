@@ -1,0 +1,41 @@
+{
+  "name": "any-pattern",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.js",
+  "description": "Print anything on terminal",
+  "repository": {
+    "url": "https://github.com/diyonfinesco/any-pattern"
+  },
+  "prepublish": "tsc",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "18.11.18",
+    "typescript": "4.9.4"
+  },
+  "keywords": [
+    "print",
+    "pattern",
+    "color",
+    "colour",
+    "colors",
+    "star",
+    "patterns",
+    "terminal",
+    "console",
+    "cli",
+    "star patter",
+    "string",
+    "str",
+    "log",
+    "logging",
+    "command-line",
+    "text"
+  ],
+  "license": "MIT"
+}
