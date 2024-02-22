@@ -821,13 +821,11 @@ class AnyPattern {
 
 const anyPattern = {
     print(text: string, color?: Color) {
-        new AnyPattern().print(text, color)
+        new AnyPattern().print(text.toLocaleLowerCase(), color)
     },
     shape(shape: Shape, color?: Color) {
         new AnyPattern().shape(shape, color)
     }
 }
-
-anyPattern.print("abcdefghijklmnopqrstuvwxyz")
 
 export default anyPattern;

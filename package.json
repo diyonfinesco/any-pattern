@@ -1,22 +1,30 @@
 {
   "name": "any-pattern",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "description": "Print anything on terminal",
   "repository": {
     "url": "https://github.com/diyonfinesco/any-pattern"
   },
   "prepublish": "tsc",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "chalk": "^4.1.2"
   },
   "devDependencies": {
+    "@swc/core": "^1.4.2",
     "@types/node": "18.11.18",
-    "typescript": "4.9.4"
+    "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
+    "typescript": "^4.9.4"
   },
   "keywords": [
     "print",
