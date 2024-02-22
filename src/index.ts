@@ -828,4 +828,11 @@ const anyPattern = {
     }
 }
 
-export default anyPattern;
+export function anyLog(text: string, color?: Color) {
+    new AnyPattern().print(text.toLocaleLowerCase(), color)
+}
+
+export function anyShape(shape: Shape, color?: Color) {
+    new AnyPattern().shape(shape, color)
+}
+
