@@ -32,25 +32,25 @@ npm i any-pattern
 
 ###  JavaScript
 ```js
-const anyPattern = require("any-pattern").default;
+const anyPattern = require("any-pattern");
 
-anyPattern.print("Hello", "red");
+anyPattern.anyLog("Hello", "red");
 ```
 <br />
 
 ### TypeScript
 ```ts
-import anyPattern from 'any-pattern';
+import { anyLog } from 'any-pattern';
 
-anyPattern.print("Bye", "yellowBright");
+anyLog("Bye", "yellowBright");
 ```
 <br />
 
-### Ex: print method
+### Ex: anyLog method
 ```js
 import anyPattern from 'any-pattern';
 
-anyPattern.print("Gm", "yellowBright");
+anyPattern.anyLog("Gm", "yellowBright");
 ```
 This will print the following output to the terminal:
 
@@ -59,11 +59,11 @@ This will print the following output to the terminal:
 	<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/Gm.png" width="90%" />
 </div>
 
-### Ex: shape method
+### Ex: anyShape method
 ```js
 import anyPattern from 'any-pattern';
 
-anyPattern.shape("heart", "red");
+anyPattern.anyShape("heart", "red");
 ```
 This will print the following output to the terminal:
 
@@ -80,19 +80,19 @@ These are some examples for usage.
 import anyPattern from 'any-pattern';
 
 // default color (white)
-anyPattern.print("Hi");
+anyPattern.anyLog("Hi");
 
 // red color 
-anyPattern.print("Good Morning", "red");
+anyPattern.anyLog("Good Morning", "red");
 
 // magenta color 
-anyPattern.print("Bye", "magenta");
+anyPattern.anyLog("Bye", "magenta");
 
 // hollow square shape with green color 
-anyPattern.shape("hollow square", "green");
+anyPattern.anyShape("hollow square", "green");
 
 // diamond shape with yellow color 
-anyPattern.shape("diamond", "yellow");
+anyPattern.anyShape("diamond", "yellow");
 ```
 
 ## Shapes
