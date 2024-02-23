@@ -48,9 +48,9 @@ anyLog("Bye", "yellowBright");
 
 ### Ex: anyLog method
 ```js
-import anyPattern from 'any-pattern';
+import { anyLog } from 'any-pattern';
 
-anyPattern.anyLog("Gm", "yellowBright");
+anyLog("Gm", "yellowBright");
 ```
 This will print the following output to the terminal:
 
@@ -61,9 +61,9 @@ This will print the following output to the terminal:
 
 ### Ex: anyShape method
 ```js
-import anyPattern from 'any-pattern';
+import { anyShape } from 'any-pattern';
 
-anyPattern.anyShape("heart", "red");
+anyShape("heart", "red");
 ```
 This will print the following output to the terminal:
 
@@ -77,22 +77,22 @@ This will print the following output to the terminal:
 These are some examples for usage.
 
 ```js
-import anyPattern from 'any-pattern';
+import { anyLog, anyShape } from 'any-pattern';
 
 // default color (white)
-anyPattern.anyLog("Hi");
+anyLog("Hi");
 
 // red color 
-anyPattern.anyLog("Good Morning", "red");
+anyLog("Good Morning", "red");
 
 // magenta color 
-anyPattern.anyLog("Bye", "magenta");
+anyLog("Bye", "magenta");
 
 // hollow square shape with green color 
-anyPattern.anyShape("hollow square", "green");
+anyShape("hollow square", "green");
 
 // diamond shape with yellow color 
-anyPattern.anyShape("diamond", "yellow");
+anyShape("diamond", "yellow");
 ```
 
 ## Shapes
