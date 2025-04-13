@@ -8,14 +8,14 @@
 > Print anything on terminal with beautiful patterns
 
 <p>
-The package allows users to print letters, shapes, animals, and characters on the terminal with ASCII art patterns and in different colors. It can be installed via npm and can be used in JavaScript or TypeScript by importing the package and calling the appropriate functions with the desired color.
+The package allows users to print letters, shapes, animals, and Moods on the terminal with ASCII art patterns and in different colors. It can be installed via npm and can be used in JavaScript or TypeScript by importing the package and calling the appropriate functions with the desired color.
 </p>
 
 ## Features
 - Print letters with `anyLog`
 - Print shapes with `anyShape`
 - Print animals with `anyAnimal`
-- Print characters with `anyCharacter`
+- Print moods with `anyMood`
 - Support for 16 different colors
 - TypeScript support with type definitions
 - CommonJS and ES Module support
@@ -36,17 +36,17 @@ const anyPattern = require("any-pattern");
 anyPattern.anyLog("Hello", "red");
 anyPattern.anyShape("heart", "blue");
 anyPattern.anyAnimal("cat", "yellow");
-anyPattern.anyCharacter("smiley", "green");
+anyPattern.anyMood("smiley", "green");
 ```
 
 ### TypeScript
 ```ts
-import { anyLog, anyShape, anyAnimal, anyCharacter } from 'any-pattern';
+import { anyLog, anyShape, anyAnimal, anyMood } from 'any-pattern';
 
 anyLog("Hello", "red");
 anyShape("heart", "blue");
 anyAnimal("cat", "yellow");
-anyCharacter("smiley", "green");
+anyMood("smiley", "green");
 ```
 
 ## Letters
@@ -110,34 +110,27 @@ anyAnimal("dog", "yellow");
 ### Available Animals
 - Cat
 - Dog
-- Bird
 - Fish
-- Pig
-- Mouse
-- Cow
-- Snake
+- bat
 - Rabbit
-- Duck
-- Owl
 - Monkey
 - Elephant
-- Bear
-- Lion
+- scorpion
 
-## Characters
-Print expressive ASCII art characters with the `anyCharacter` function.
+## Moods
+Print expressive ASCII art Moods with the `anyMood` function.
 
 ```js
-import { anyCharacter } from 'any-pattern';
+import { anyMood } from 'any-pattern';
 
 // Print a smiley face in yellow
-anyCharacter("smiley", "yellow");
+anyMood("smiley", "yellow");
 
 // Print a sad face in blue
-anyCharacter("sad", "blue");
+anyMood("sad", "blue");
 ```
 
-### Available Characters
+### Available Moods
 - Smiley
 - Sad
 - Angry
@@ -169,17 +162,10 @@ All functions support the following colors:
 - cyanBright
 - whiteBright
 
-## Examples
-
-### Printing a Message
-```js
-import { anyLog } from 'any-pattern';
-anyLog("Hello World", "cyan");
-```
 
 ### Creating a Scene
 ```js
-import { anyLog, anyShape, anyAnimal, anyCharacter } from 'any-pattern';
+import { anyLog, anyShape, anyAnimal, anyMood } from 'any-pattern';
 
 // Print a message
 anyLog("Welcome to the Zoo!", "green");
@@ -189,9 +175,9 @@ anyAnimal("lion", "yellow");
 anyAnimal("elephant", "gray");
 anyAnimal("monkey", "brown");
 
-// Add some characters
-anyCharacter("smiley", "yellow");
-anyCharacter("cool", "blue");
+// Add some Moods
+anyMood("smiley", "yellow");
+anyMood("cool", "blue");
 ```
 
 ## Contributing

@@ -1,5 +1,8 @@
 import chalk from "chalk";
-import { letterPatterns, characterPatterns, shapePatterns, animalPatterns } from './patterns'; // Import pattern data
+import { moodsPatterns } from "./moods";
+import { letterPatterns } from "./letters";
+import { shapePatterns } from "./shapes";
+import { animalPatterns } from "./animals";
 
 type Color =
     | 'black'
@@ -11,7 +14,7 @@ type Color =
     | 'cyan'
     | 'white'
     | 'blackBright'
-    | 'gray' // Note: chalk.gray is an alias for blackBright
+    | 'gray'
     | 'redBright'
     | 'greenBright'
     | 'yellowBright'
@@ -20,14 +23,15 @@ type Color =
     | 'cyanBright'
     | 'whiteBright';
 
-// Infer Shape type from the keys of shapePatterns for better maintainability
-type Shape = keyof typeof shapePatterns;
-// Infer Animal type from the keys of animalPatterns
-type Animal = keyof typeof animalPatterns;
 
-// Helper function to print a pattern line by line with color
+type Shape = keyof typeof shapePatterns;
+type Animal = keyof typeof animalPatterns;
+type Mood = keyof typeof moodsPatterns;
+type Letter = keyof typeof letterPatterns;
+
+
 function printPattern(pattern: string[], color: Color = 'white') {
-    const chalkColor = chalk[color] || chalk.white; // Fallback to white if color is invalid
+    const chalkColor = chalk[color] || chalk.white;
     pattern.forEach(line => {
         console.log(chalkColor.bold(line));
     });
@@ -38,7 +42,7 @@ function printPattern(pattern: string[], color: Color = 'white') {
  * @param text The string to print.
  * @param color The color to use (default: white).
  */
-export function anyLog(text: string, color: string = 'white'): void {
+export function anyLog(text: Letter, color: string = 'white'): void {
     const lowerText = text.toLowerCase();
     for (const char of lowerText) {
         const pattern = letterPatterns[char];
@@ -90,10 +94,10 @@ export function anyAnimal(animal: Animal, color: Color = 'white') {
     }
 }
 
-export function anyCharacter(character: string, color: string = 'white'): void {
-    const pattern = characterPatterns[character.toLowerCase()];
+export function anyMood(mood: Mood, color: string = 'white'): void {
+    const pattern = moodsPatterns[mood.toLowerCase()];
     if (!pattern) {
-        console.log(chalk.red(`Character "${character}" not found!`));
+        console.log(chalk.red(`Mood "${mood}" not found!`));
         return;
     }
 
@@ -107,4 +111,3 @@ export function anyCharacter(character: string, color: string = 'white'): void {
         console.log(colorFn(line));
     });
 }
-
