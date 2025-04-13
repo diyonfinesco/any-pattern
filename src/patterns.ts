@@ -1,4 +1,4 @@
-export const characterPatterns: { [key: string]: string[] } = {
+export const letterPatterns: Record<string, string[]> = {
     a: [
         '    *    ',
         '   * *   ',
@@ -57,7 +57,7 @@ export const characterPatterns: { [key: string]: string[] } = {
         '*   *',
         '*   *'
     ],
-    i: [ // Note: 7 lines high
+    i: [
         '*******',
         '   *   ',
         '   *   ',
@@ -87,7 +87,7 @@ export const characterPatterns: { [key: string]: string[] } = {
         '*    ',
         '*****'
     ],
-    m: [ // Note: 7 columns wide
+    m: [
         '*     *',
         '**   **',
         '* * * *',
@@ -150,14 +150,14 @@ export const characterPatterns: { [key: string]: string[] } = {
         '*   *',
         ' *** '
     ],
-    v: [ // Note: 9 columns wide
+    v: [
         '*       *',
         ' *     * ',
         '  *   *  ',
         '   * *   ',
         '    *    '
     ],
-    w: [ // Note: 7 lines high, 14 columns wide (uses "* " spacing)
+    w: [
         '*           * ',
         '*           * ',
         '*           * ',
@@ -180,12 +180,105 @@ export const characterPatterns: { [key: string]: string[] } = {
         '  *  ',
         '  *  '
     ],
-    z: [ // Note: 10 columns wide (uses "* " spacing)
+    z: [
         '* * * * * ',
         '      *   ',
         '    *     ',
         '  *       ',
         '* * * * * '
+    ]
+};
+
+export const characterPatterns: Record<string, string[]> = {
+    'smiley': [
+        '  *****  ',
+        ' *     * ',
+        '*  O O  *',
+        '*   ^   *',
+        '*  \\_/  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'sad': [
+        '  *****  ',
+        ' *     * ',
+        '*  O O  *',
+        '*   v   *',
+        '*  ___  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'angry': [
+        '  *****  ',
+        ' *     * ',
+        '*  > <  *',
+        '*   ^   *',
+        '*  ___  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'surprised': [
+        '  *****  ',
+        ' *     * ',
+        '*  O O  *',
+        '*   O   *',
+        '*  ___  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'wink': [
+        '  *****  ',
+        ' *     * ',
+        '*  O -  *',
+        '*   ^   *',
+        '*  \\_/  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'cool': [
+        '  *****  ',
+        ' *     * ',
+        '*  O O  *',
+        '*   ^   *',
+        '*  \\_/  *',
+        ' *  |  * ',
+        '  *****  '
+    ],
+    'sleepy': [
+        '  *****  ',
+        ' *     * ',
+        '*  - -  *',
+        '*   v   *',
+        '*  ___  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'nerd': [
+        '  *****  ',
+        ' *     * ',
+        '*  O O  *',
+        '*   ^   *',
+        '*  \\_/  *',
+        ' *  |  * ',
+        '  *****  '
+    ],
+    'robot': [
+        '  *****  ',
+        ' *     * ',
+        '*  [ ]  *',
+        '*   -   *',
+        '*  [ ]  *',
+        ' *     * ',
+        '  *****  '
+    ],
+    'alien': [
+        '  *****  ',
+        ' *     * ',
+        '*  @ @  *',
+        '*   ^   *',
+        '*  \\_/  *',
+        ' *     * ',
+        '  *****  '
     ]
 };
 

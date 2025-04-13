@@ -202,6 +202,55 @@ You can use any of the following colors with both `anyLog`, `anyShape`, and `any
 - cyanBright
 - whiteBright
 
+## Characters
+You can now print various character patterns on your terminal using the `anyCharacter` function.
+
+```js
+import { anyCharacter } from 'any-pattern';
+
+// Print a smiley face in yellow
+anyCharacter('smiley', 'yellow');
+
+// Print a sad face in blue
+anyCharacter('sad', 'blue');
+
+// Print an angry face in red
+anyCharacter('angry', 'red');
+
+// Print a surprised face in cyan
+anyCharacter('surprised', 'cyan');
+
+// Print a winking face in magenta
+anyCharacter('wink', 'magenta');
+
+// Print a cool face in green
+anyCharacter('cool', 'green');
+
+// Print a sleepy face in gray
+anyCharacter('sleepy', 'gray');
+
+// Print a nerd face in white
+anyCharacter('nerd', 'white');
+
+// Print a robot face in blueBright
+anyCharacter('robot', 'blueBright');
+
+// Print an alien face in greenBright
+anyCharacter('alien', 'greenBright');
+```
+
+### Available Characters
+- Smiley
+- Sad
+- Angry
+- Surprised
+- Wink
+- Cool
+- Sleepy
+- Nerd
+- Robot
+- Alien
+
 ## Contributing
 If you would like to contribute to the development of this package, please create a pull request 👨‍💻
 

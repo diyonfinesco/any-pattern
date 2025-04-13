@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { characterPatterns, shapePatterns, animalPatterns } from './patterns'; // Import pattern data
+import { letterPatterns, characterPatterns, shapePatterns, animalPatterns } from './patterns'; // Import pattern data
 
 type Color =
     | 'black'
@@ -38,19 +38,25 @@ function printPattern(pattern: string[], color: Color = 'white') {
  * @param text The string to print.
  * @param color The color to use (default: white).
  */
-export function anyLog(text: string, color: Color = 'white') {
-    const lowerCaseText = text.toLowerCase();
-
-    for (const char of lowerCaseText) {
-        const pattern = characterPatterns[char];
-        if (pattern) {
-            printPattern(pattern, color);
-            console.log(); // Add a blank line between characters like the original
-        } else {
-            // Handle characters without defined patterns (e.g., spaces, symbols)
-            // Original code skipped them, so we do the same.
-            console.log(); // Maintain spacing even for unknown chars
+export function anyLog(text: string, color: string = 'white'): void {
+    const lowerText = text.toLowerCase();
+    for (const char of lowerText) {
+        const pattern = letterPatterns[char];
+        if (!pattern) {
+            console.log(chalk.red(`Letter "${char}" not found!`));
+            continue;
         }
+
+        const colorFn = (chalk as any)[color];
+        if (!colorFn || typeof colorFn !== 'function') {
+            console.log(chalk.red(`Color "${color}" not found!`));
+            return;
+        }
+
+        pattern.forEach(line => {
+            console.log(colorFn(line));
+        });
+        console.log(); // Add a blank line between letters
     }
 }
 
@@ -82,5 +88,23 @@ export function anyAnimal(animal: Animal, color: Color = 'white') {
     } else {
         console.warn(`Animal "${animal}" not found.`);
     }
+}
+
+export function anyCharacter(character: string, color: string = 'white'): void {
+    const pattern = characterPatterns[character.toLowerCase()];
+    if (!pattern) {
+        console.log(chalk.red(`Character "${character}" not found!`));
+        return;
+    }
+
+    const colorFn = (chalk as any)[color];
+    if (!colorFn || typeof colorFn !== 'function') {
+        console.log(chalk.red(`Color "${color}" not found!`));
+        return;
+    }
+
+    pattern.forEach(line => {
+        console.log(colorFn(line));
+    });
 }
 
