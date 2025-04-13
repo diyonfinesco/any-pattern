@@ -24,10 +24,43 @@ type Color =
     | 'whiteBright';
 
 
-type Shape = keyof typeof shapePatterns;
-type Animal = keyof typeof animalPatterns;
-type Mood = keyof typeof moodsPatterns;
-type Letter = keyof typeof letterPatterns;
+type Shape =
+    | 'square'
+    | 'hollow square'
+    | 'right triangle'
+    | 'left triangle'
+    | 'downward triangle'
+    | 'hollow triangle'
+    | 'pyramid'
+    | 'hollow pyramid'
+    | 'reversed pyramid'
+    | 'diamond'
+    | 'hollow diamond'
+    | 'hourglass'
+    | 'heart';
+
+type Animal =
+    | 'cat'
+    | 'dog'
+    | 'scorpion'
+    | 'bat'
+    | 'rabbit'
+    | 'monkey'
+    | 'elephant'
+    | 'fish'
+
+
+type Mood =
+    | 'smiley'
+    | 'sad'
+    | 'angry'
+    | 'surprised'
+    | 'wink'
+    | 'cool'
+    | 'sleepy'
+    | 'nerd'
+    | 'robot'
+    | 'alien';
 
 
 function printPattern(pattern: string[], color: Color = 'white') {
@@ -42,7 +75,7 @@ function printPattern(pattern: string[], color: Color = 'white') {
  * @param text The string to print.
  * @param color The color to use (default: white).
  */
-export function anyLog(text: Letter, color: string = 'white'): void {
+export function anyLog(text: string, color: string = 'white'): void {
     const lowerText = text.toLowerCase();
     for (const char of lowerText) {
         const pattern = letterPatterns[char];
@@ -88,7 +121,8 @@ export function anyAnimal(animal: Animal, color: Color = 'white') {
     const pattern = animalPatterns[animal];
     if (pattern) {
         printPattern(pattern, color);
-        console.log(); // Add a blank line after the animal 
+        console.log();
+        
     } else {
         console.warn(`Animal "${animal}" not found.`);
     }
