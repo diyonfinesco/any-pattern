@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { characterPatterns, shapePatterns } from './patterns'; // Import pattern data
+import { characterPatterns, shapePatterns, animalPatterns } from './patterns'; // Import pattern data
 
 type Color =
     | 'black'
@@ -22,6 +22,8 @@ type Color =
 
 // Infer Shape type from the keys of shapePatterns for better maintainability
 type Shape = keyof typeof shapePatterns;
+// Infer Animal type from the keys of animalPatterns
+type Animal = keyof typeof animalPatterns;
 
 // Helper function to print a pattern line by line with color
 function printPattern(pattern: string[], color: Color = 'white') {
@@ -64,6 +66,21 @@ export function anyShape(shape: Shape, color: Color = 'white') {
         console.log(); // Add a blank line after the shape like the original
     } else {
         console.warn(`Shape "${shape}" not found.`);
+    }
+}
+
+/**
+ * Prints a predefined animal pattern.
+ * @param animal The name of the animal to print.
+ * @param color The color to use (default: white).
+ */
+export function anyAnimal(animal: Animal, color: Color = 'white') {
+    const pattern = animalPatterns[animal];
+    if (pattern) {
+        printPattern(pattern, color);
+        console.log(); // Add a blank line after the animal 
+    } else {
+        console.warn(`Animal "${animal}" not found.`);
     }
 }
 
