@@ -49,11 +49,11 @@ anyAnimal("cat", "yellow");
 anyMood("smiley", "green");
 ```
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/Hey.png" 
+<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/Hey.png" >
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/heart.png" 
+<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/heart.png" >
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/elephant.png" 
+<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/elephant.png" >
 
 ## Letters
 Print text using ASCII art letters with the `anyLog` function.
