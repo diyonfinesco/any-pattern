@@ -103,7 +103,7 @@ export function anyLog(text: string, color: string = 'white'): void {
  * @param color The color to use (default: white).
  */
 export function anyShape(shape: Shape, color: Color = 'white') {
-    const pattern = shapePatterns[shape];
+    const pattern = shapePatterns[shape.toLowerCase()];
     if (pattern) {
         printPattern(pattern, color);
         console.log(); // Add a blank line after the shape like the original
@@ -118,11 +118,11 @@ export function anyShape(shape: Shape, color: Color = 'white') {
  * @param color The color to use (default: white).
  */
 export function anyAnimal(animal: Animal, color: Color = 'white') {
-    const pattern = animalPatterns[animal];
+    const pattern = animalPatterns[animal.toLowerCase()];
     if (pattern) {
         printPattern(pattern, color);
         console.log();
-        
+
     } else {
         console.warn(`Animal "${animal}" not found.`);
     }
