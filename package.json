@@ -1,6 +1,6 @@
 {
   "name": "any-pattern",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -32,23 +32,16 @@
     "vitest": "^1.5.0"
   },
   "keywords": [
-    "print",
+    "ascii-art",
+    "cli",
+    "terminal",
+    "banner",
+    "text-art",
+    "nodejs",
+    "fun",
     "pattern",
     "color",
-    "colour",
-    "colors",
-    "star",
-    "patterns",
-    "terminal",
-    "console",
-    "cli",
-    "star patter",
-    "string",
-    "str",
-    "log",
-    "logging",
-    "command-line",
-    "text"
+    "typescript"
   ],
   "license": "MIT"
 }
