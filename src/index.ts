@@ -1,147 +1,222 @@
 import chalk from "chalk";
-import { moodsPatterns } from "./moods";
-import { letterPatterns } from "./letters";
-import { shapePatterns } from "./shapes";
-import { animalPatterns } from "./animals";
+import { moodPatterns } from "./anyMood";
+import { logPatterns } from "./anyLog";
+import { shapePatterns } from "./anyShape";
+import { animalPatterns } from "./anyAnimal";
 
-type Color =
-    | 'black'
-    | 'red'
-    | 'green'
-    | 'yellow'
-    | 'blue'
-    | 'magenta'
-    | 'cyan'
-    | 'white'
-    | 'blackBright'
-    | 'gray'
-    | 'redBright'
-    | 'greenBright'
-    | 'yellowBright'
-    | 'blueBright'
-    | 'magentaBright'
-    | 'cyanBright'
-    | 'whiteBright';
+/* ======================
+ * Types
+ * ====================== */
 
+export type Color =
+    | "black"
+    | "red"
+    | "green"
+    | "yellow"
+    | "blue"
+    | "magenta"
+    | "cyan"
+    | "white"
+    | "blackBright"
+    | "gray"
+    | "redBright"
+    | "greenBright"
+    | "yellowBright"
+    | "blueBright"
+    | "magentaBright"
+    | "cyanBright"
+    | "whiteBright";
 
-type Shape =
-    | 'square'
-    | 'hollow square'
-    | 'right triangle'
-    | 'left triangle'
-    | 'downward triangle'
-    | 'hollow triangle'
-    | 'pyramid'
-    | 'hollow pyramid'
-    | 'reversed pyramid'
-    | 'diamond'
-    | 'hollow diamond'
-    | 'hourglass'
-    | 'heart';
+export type Shape =
+    | "arrow"
+    | "arrow down"
+    | "arrow up"
+    | "circle"
+    | "cross"
+    | "downward triangle"
+    | "diamond"
+    | "heart"
+    | "hexagon"
+    | "hollow circle"
+    | "hollow diamond"
+    | "hollow pyramid"
+    | "hollow square"
+    | "hollow triangle"
+    | "hourglass"
+    | "infinity"
+    | "left arrow"
+    | "octagon"
+    | "oval"
+    | "pentagon"
+    | "plus"
+    | "pyramid"
+    | "reversed pyramid"
+    | "right arrow"
+    | "right triangle"
+    | "square"
+    | "star"
+    | "wave";
 
-type Animal =
-    | 'cat'
-    | 'dog'
-    | 'scorpion'
-    | 'bat'
-    | 'rabbit'
-    | 'monkey'
-    | 'elephant'
-    | 'fish'
+export type Animal =
+    | "bat"
+    | "bird"
+    | "cat"
+    | "cow"
+    | "dog"
+    | "duck"
+    | "elephant"
+    | "fish"
+    | "frog"
+    | "horse"
+    | "monkey"
+    | "penguin"
+    | "rabbit"
+    | "scorpion";
 
+export type Mood =
+    | "alien"
+    | "angry"
+    | "blushing"
+    | "bored"
+    | "cool"
+    | "confused"
+    | "crying"
+    | "laughing"
+    | "love"
+    | "mad"
+    | "nerd"
+    | "robot"
+    | "sad"
+    | "shocked"
+    | "sleepy"
+    | "smiley"
+    | "surprised"
+    | "surly"
+    | "thinking"
+    | "wink";
 
-type Mood =
-    | 'smiley'
-    | 'sad'
-    | 'angry'
-    | 'surprised'
-    | 'wink'
-    | 'cool'
-    | 'sleepy'
-    | 'nerd'
-    | 'robot'
-    | 'alien';
+/* ======================
+ * Internals
+ * ====================== */
 
+type PatternMap = Record<string, string[]>;
+type ChalkFn = (str: string) => string;
 
-function printPattern(pattern: string[], color: Color = 'white') {
-    const chalkColor = chalk[color] || chalk.white;
-    pattern.forEach(line => {
-        console.log(chalkColor.bold(line));
-    });
+const DEFAULT_COLOR: Color = "white";
+
+const DEFAULT_LOG_OPTIONS = {
+    char: "*",
+    spacing: 2,
+    scale: 1,
+} as const;
+
+export type LogOptions = Partial<typeof DEFAULT_LOG_OPTIONS>;
+
+function normalizeKey(input: string): string {
+    return input.toLowerCase().trim();
 }
+
+function resolveColorFn(color: Color = DEFAULT_COLOR): ChalkFn {
+    const fn = (chalk as any)[color];
+    return typeof fn === "function" ? (fn as ChalkFn) : chalk.white;
+}
+
+function printLines(
+    content: string[] | string,
+    color: Color = DEFAULT_COLOR,
+    { bold = true }: { bold?: boolean } = {}
+): void {
+    const colorFn = resolveColorFn(color);
+    const stylize = bold ? (s: string) => colorFn(chalk.bold(s)) : colorFn;
+
+    if (Array.isArray(content)) {
+        content.forEach((line) => console.log(stylize(line)));
+    } else {
+        console.log(stylize(content));
+    }
+}
+
+function getPattern(
+    map: PatternMap,
+    key: string
+): string[] | undefined {
+    return map[normalizeKey(key)];
+}
+
+function warn(kind: string, value: string): void {
+    console.warn(`⚠️ ${kind} "${value}" not found.`);
+}
+
+/* ======================
+ * Public API
+ * ====================== */
 
 /**
  * Prints text as a sequence of character patterns.
  * @param text The string to print.
  * @param color The color to use (default: white).
+ * @param options Optional rendering options for the log pattern.
  */
-export function anyLog(text: string, color: string = 'white'): void {
-    const lowerText = text.toLowerCase();
-    for (const char of lowerText) {
-        const pattern = letterPatterns[char];
-        if (!pattern) {
-            console.log(chalk.red(`Letter "${char}" not found!`));
-            continue;
-        }
+export function anyLog(
+    text: string,
+    color: Color = DEFAULT_COLOR,
+    options: LogOptions = {}
+): void {
+    try {
+        const cfg = { ...DEFAULT_LOG_OPTIONS, ...options };
+        const output = logPatterns(text.toLowerCase(), cfg) as string | undefined;
 
-        const colorFn = (chalk as any)[color];
-        if (!colorFn || typeof colorFn !== 'function') {
-            console.log(chalk.red(`Color "${color}" not found!`));
-            return;
+        if (output) {
+            printLines(output, color, { bold: true });
+        } else {
+            console.warn(`Something went wrong rendering the text "${text}".`);
         }
-
-        pattern.forEach(line => {
-            console.log(colorFn(line));
-        });
-        console.log(); // Add a blank line between letters
+    } catch (err) {
+        console.warn(`Something went wrong rendering the text "${text}".`);
     }
 }
 
 /**
- * Prints a predefined shape pattern.
- * @param shape The name of the shape to print.
- * @param color The color to use (default: white).
+ * Renders a geometric shape pattern.
  */
-export function anyShape(shape: Shape, color: Color = 'white') {
-    const pattern = shapePatterns[shape.toLowerCase()];
-    if (pattern) {
-        printPattern(pattern, color);
-        console.log(); // Add a blank line after the shape like the original
-    } else {
-        console.warn(`Shape "${shape}" not found.`);
-    }
-}
+export function anyShape(shape: Shape, color: Color = DEFAULT_COLOR): void {
+    const map = shapePatterns as unknown as PatternMap;
+    const pattern = getPattern(map, shape);
 
-/**
- * Prints a predefined animal pattern.
- * @param animal The name of the animal to print.
- * @param color The color to use (default: white).
- */
-export function anyAnimal(animal: Animal, color: Color = 'white') {
-    const pattern = animalPatterns[animal.toLowerCase()];
     if (pattern) {
-        printPattern(pattern, color);
+        printLines(pattern, color, { bold: true });
         console.log();
-
     } else {
-        console.warn(`Animal "${animal}" not found.`);
+        warn("Shape", shape);
     }
 }
 
-export function anyMood(mood: Mood, color: string = 'white'): void {
-    const pattern = moodsPatterns[mood.toLowerCase()];
+/**
+ * Renders an animal pattern.
+ */
+export function anyAnimal(animal: Animal, color: Color = DEFAULT_COLOR): void {
+    const map = animalPatterns as unknown as PatternMap;
+    const pattern = getPattern(map, animal);
+
+    if (pattern) {
+        printLines(pattern, color, { bold: true });
+        console.log();
+    } else {
+        warn("Animal", animal);
+    }
+}
+
+/**
+ * Renders a mood (emoji-like) pattern.
+ */
+export function anyMood(mood: Mood, color: Color = DEFAULT_COLOR): void {
+    const map = moodPatterns as unknown as PatternMap;
+    const pattern = getPattern(map, mood);
+
     if (!pattern) {
-        console.log(chalk.red(`Mood "${mood}" not found!`));
+        warn("Mood", mood);
         return;
     }
 
-    const colorFn = (chalk as any)[color];
-    if (!colorFn || typeof colorFn !== 'function') {
-        console.log(chalk.red(`Color "${color}" not found!`));
-        return;
-    }
-
-    pattern.forEach(line => {
-        console.log(colorFn(line));
-    });
+    printLines(pattern, color, { bold: false });
 }
