@@ -1,213 +1,155 @@
-<div align="center">
-	<br>
-	<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/logo.png" width="90%" />
-	<br>
-	<br>
-</div>
+# any-pattern
 
-> Print anything on terminal with beautiful patterns
+Turn plain terminal output into colourful ASCII art. `any-pattern` ships with banners, shapes, animals, and moods that you can render from code **or** directly from the command line.
 
-<p>
-The package allows users to print letters, shapes, animals, and Moods on the terminal with ASCII art patterns and in different colors. It can be installed via npm and can be used in JavaScript or TypeScript by importing the package and calling the appropriate functions with the desired color.
+<p align="center">
+  <img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/logo.png" width="75%" alt="any-pattern logo" />
 </p>
 
-## Features
-- Print letters with `anyLog`
-- Print shapes with `anyShape`
-- Print animals with `anyAnimal`
-- Print moods with `anyMood`
-- Use directly from the command line with `any-pattern`
-- Support for 16 different colors
-- TypeScript support with type definitions
-- CommonJS and ES Module support
+## Highlights
+- ready-to-use functions: `anyLog`, `anyShape`, `anyAnimal`, `anyMood`
+- interactive CLI (`npx any-pattern`) with `--list` exploration
+- 16 chalk colours plus banner spacing/scale options
+- works with CommonJS, ESM, and TypeScript projects
+- tree of ASCII assets you can extend or customise
 
 ## Installation
-To install the package, run the following command in your terminal:
 
-```sh
-npm i any-pattern
+```bash
+npm install any-pattern
+# or
+yarn add any-pattern
+# or
+pnpm add any-pattern
 ```
 
-## Usage
+The CLI can be invoked without installing globally:
 
-### JavaScript
-```js
-const anyPattern = require("any-pattern");
-
-anyPattern.anyLog("Hello", "red");
-anyPattern.anyShape("heart", "blue");
-anyPattern.anyAnimal("cat", "yellow");
-anyPattern.anyMood("smiley", "green");
+```bash
+npx any-pattern --help
 ```
 
-### TypeScript
+## Quick Start
+
 ```ts
 import { anyLog, anyShape, anyAnimal, anyMood } from 'any-pattern';
 
-anyLog("Hello", "red");
-anyShape("heart", "blue");
-anyAnimal("cat", "yellow");
-anyMood("smiley", "green");
+anyLog('Hello', 'cyanBright', { char: '#', spacing: 2 });
+anyShape('heart', 'redBright');
+anyAnimal('cat', 'yellow');
+anyMood('cool', 'blue');
 ```
 
-## CLI
+`Color` is a strict union, so you get autocomplete and type checking in TypeScript-aware editors.
 
-Run without installing globally using `npx`:
+## CLI Usage
 
-```sh
-npx any-pattern log "Hello World" --color cyan
+```bash
+npx any-pattern log "Hello World" --color magentaBright --spacing 1 --scale 2
+npx any-pattern shape heart --color red
+npx any-pattern animal penguin
+npx any-pattern mood laughing --color yellowBright
+npx any-pattern --list shapes      # works as global flag
+npx any-pattern list animals       # traditional sub-command
 ```
 
-Available commands:
+### Supported commands
+- `log <text>` – render banner text (options: `--color`, `--char`, `--spacing`, `--scale`)
+- `shape <name>` – draw a geometric pattern
+- `animal <name>` – print an ASCII critter
+- `mood <name>` – show an emoji-style face
+- `list <shapes|animals|moods|colors>` – inspect what is bundled (also available via `--list`/`-l`)
 
-- `any-pattern log "Text"` – render ASCII banner text (use `--char`, `--spacing`, `--scale` for extra control)
-- `any-pattern shape heart --color redBright`
-- `any-pattern animal cat --color yellow`
-- `any-pattern mood cool`
-- `any-pattern list shapes|animals|moods|colors`
-- `any-pattern --list shapes|animals|moods|colors`
+Run `any-pattern --help` to see all flags in context.
 
-Use `any-pattern --help` to see all options.
+## API Reference
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/Hey.png" >
+### `anyLog(text, color?, options?)`
+Render banner text using the built-in 5×7 font.
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/heart.png" >
+- `text` (`string`): content to render (letters, numbers, and space are supported)
+- `color` (`Color`, default `white`): chalk colour name
+- `options`:
+  - `char` (`string`, default `*`): character used for filled pixels
+  - `spacing` (`number`, default `2`): gap between glyphs
+  - `scale` (`number`, default `1`): scales glyph width/height uniformly
 
-<img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/animals.png" >
+### `anyShape(shape, color?)`
+Print a shape from the catalogue. Shape names are case-insensitive; see the list below.
 
-## Letters
-Print text using ASCII art letters with the `anyLog` function.
+### `anyAnimal(animal, color?)`
+Render one of the bundled animals.
 
-```js
-import { anyLog } from 'any-pattern';
+### `anyMood(mood, color?)`
+Display an emoji-like face. Unlike the other functions the output is not bolded, so it resembles emoticons.
 
-// Print "Hello" in red
-anyLog("Hello", "red");
+### Colours
 
-// Print "World" in blue (default color is white)
-anyLog("World");
+`any-pattern` understands the Chalk v4 palette:
+
+`black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `blackBright`, `gray`, `redBright`, `greenBright`, `yellowBright`, `blueBright`, `magentaBright`, `cyanBright`, `whiteBright`
+
+## Pattern Catalogue
+
+### Shapes
+`arrow`, `arrow down`, `arrow up`, `circle`, `cross`, `diamond`, `downward triangle`, `heart`, `hexagon`, `hollow circle`, `hollow diamond`, `hollow pyramid`, `hollow square`, `hollow triangle`, `hourglass`, `infinity`, `left arrow`, `left triangle`, `octagon`, `oval`, `pentagon`, `plus`, `pyramid`, `reversed pyramid`, `right arrow`, `right triangle`, `square`, `star`, `wave`
+
+### Animals
+`bat`, `bird`, `cat`, `cow`, `dog`, `duck`, `elephant`, `fish`, `frog`, `horse`, `monkey`, `penguin`, `rabbit`, `scorpion`, `snake`
+
+### Moods
+`alien`, `angry`, `blushing`, `bored`, `cool`, `confused`, `crying`, `laughing`, `love`, `mad`, `nerd`, `robot`, `sad`, `shocked`, `sleepy`, `smiley`, `surprised`, `surly`, `thinking`, `wink`
+
+## Extending Patterns
+
+Patterns live under `src/any*.ts`. Each export is a simple object literal:
+
+```ts
+// src/anyShape.ts
+export const shapePatterns = {
+  rocket: [
+    '   ^   ',
+    '  / \\  ',
+    '  | |  ',
+    ' /___\\ ',
+    '  | |  ',
+    '  | |  ',
+    '  | |  ',
+    '  ***  '
+  ],
+  // ...
+} as const;
 ```
 
-### Supported Letters
-All letters from A to Z (case-insensitive)
+Add your pattern, rebuild, and it becomes instantly available in both the API and CLI (`any-pattern shape rocket`).
 
-## Shapes
-Print various shapes with the `anyShape` function.
+## Development
 
-```js
-import { anyShape } from 'any-pattern';
+```bash
+git clone https://github.com/diyonfinesco/any-pattern.git
+cd any-pattern
+npm install
 
-// Print a heart in red
-anyShape("heart", "red");
+npm run build      # compile TypeScript and CLI to dist/
+npm test           # run Vitest suite
 
-// Print a diamond in blue
-anyShape("diamond", "blue");
+# try the local build
+node dist/cli.js log "Dev Mode" --color cyanBright
 ```
 
-### Available Shapes
-- Square
-- Hollow Square
-- Diamond
-- Heart
-- Star
-- Triangle
-- Hollow Triangle
-- Pyramid
-- Hollow Pyramid
-- Plus
-- Cross
-- Arrow
-- Circle
-- Hollow Circle
+To try the package in another project without publishing:
 
-## Animals
-Print cute ASCII art animals with the `anyAnimal` function.
-
-```js
-import { anyAnimal } from 'any-pattern';
-
-// Print a cat in blue
-anyAnimal("cat", "blue");
-
-// Print a dog in yellow
-anyAnimal("dog", "yellow");
-```
-
-### Available Animals
-- Cat
-- Dog
-- Fish
-- bat
-- Rabbit
-- Monkey
-- Elephant
-- scorpion
-
-## Moods
-Print expressive ASCII art Moods with the `anyMood` function.
-
-```js
-import { anyMood } from 'any-pattern';
-
-// Print a smiley face in yellow
-anyMood("smiley", "yellow");
-
-// Print a sad face in blue
-anyMood("sad", "blue");
-```
-
-### Available Moods
-- Smiley
-- Sad
-- Angry
-- Surprised
-- Wink
-- Cool
-- Sleepy
-- Nerd
-- Robot
-- Alien
-
-## Colors
-All functions support the following colors:
-
-- black
-- red
-- green
-- yellow
-- blue
-- magenta
-- cyan
-- white
-- gray
-- redBright
-- greenBright
-- yellowBright
-- blueBright
-- magentaBright
-- cyanBright
-- whiteBright
-
-
-### Creating a Scene
-```js
-import { anyLog, anyShape, anyAnimal, anyMood } from 'any-pattern';
-
-// Print a message
-anyLog("Welcome to the Zoo!", "green");
-
-// Print some animals
-anyAnimal("lion", "yellow");
-anyAnimal("elephant", "gray");
-anyAnimal("monkey", "brown");
-
-// Add some Moods
-anyMood("smiley", "yellow");
-anyMood("cool", "blue");
+```bash
+npm run build
+cd examples/local-test
+npm install ../..     # installs from the local folder
+npm run demo
 ```
 
 ## Contributing
-Contributions are welcome! Please feel free to submit a Pull Request.
+
+Issues, ideas, and PRs are always welcome. If you are adding a new pattern, please include a short description, update the corresponding type union in `src/index.ts`, and add tests or examples when possible.
 
 ## License
+
 MIT © [Diyon Finesco](https://github.com/diyonfinesco)
