@@ -3,7 +3,7 @@
 Turn plain terminal output into colourful ASCII art. `any-pattern` ships with banners, shapes, animals, and moods that you can render from code **or** directly from the command line.
 
 <p align="center">
-  <img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/logo.png" width="75%" alt="any-pattern logo" />
+  <img width="600" height="200" alt="logo" src="https://github.com/user-attachments/assets/87361a67-31db-47bb-9acc-2d9030427608" />
 </p>
 
 ## Highlights
