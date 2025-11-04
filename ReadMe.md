@@ -16,6 +16,7 @@ The package allows users to print letters, shapes, animals, and Moods on the ter
 - Print shapes with `anyShape`
 - Print animals with `anyAnimal`
 - Print moods with `anyMood`
+- Use directly from the command line with `any-pattern`
 - Support for 16 different colors
 - TypeScript support with type definitions
 - CommonJS and ES Module support
@@ -48,6 +49,25 @@ anyShape("heart", "blue");
 anyAnimal("cat", "yellow");
 anyMood("smiley", "green");
 ```
+
+## CLI
+
+Run without installing globally using `npx`:
+
+```sh
+npx any-pattern log "Hello World" --color cyan
+```
+
+Available commands:
+
+- `any-pattern log "Text"` – render ASCII banner text (use `--char`, `--spacing`, `--scale` for extra control)
+- `any-pattern shape heart --color redBright`
+- `any-pattern animal cat --color yellow`
+- `any-pattern mood cool`
+- `any-pattern list shapes|animals|moods|colors`
+- `any-pattern --list shapes|animals|moods|colors`
+
+Use `any-pattern --help` to see all options.
 
 <img src="https://github.com/diyonfinesco/any-pattern/blob/main/images/Hey.png" >
 

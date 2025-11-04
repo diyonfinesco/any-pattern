@@ -4,6 +4,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "bin": {
+    "any-pattern": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],
