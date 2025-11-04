@@ -13,6 +13,13 @@ Turn plain terminal output into colourful ASCII art. `any-pattern` ships with ba
 - works with CommonJS, ESM, and TypeScript projects
 - tree of ASCII assets you can extend or customise
 
+## After you installed
+
+<img width="787" height="894" alt="Screenshot 2025-11-04 at 11 34 42" src="https://github.com/user-attachments/assets/5b6bb32c-db9d-411f-854d-653b5f8120b8" />
+
+
+<img width="725" height="204" alt="Screenshot 2025-11-04 at 11 35 03" src="https://github.com/user-attachments/assets/18aa78e1-e323-4ccb-8c53-0997fce90a3e" />
+
 ## Installation
 
 ```bash
