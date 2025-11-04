@@ -1,5 +1,11 @@
 # any-pattern
 
+[![npm version](https://img.shields.io/npm/v/any-pattern.svg?style=for-the-badge&color=blue)](https://www.npmjs.com/package/any-pattern)
+[![npm downloads](https://img.shields.io/npm/dt/any-pattern.svg?style=for-the-badge&color=brightgreen)](https://www.npmjs.com/package/any-pattern)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+
+
 Turn plain terminal output into colourful ASCII art. `any-pattern` ships with banners, shapes, animals, and moods that you can render from code **or** directly from the command line.
 
 <p align="center">
@@ -160,3 +166,8 @@ Issues, ideas, and PRs are always welcome. If you are adding a new pattern, plea
 ## License
 
 MIT © [Diyon Finesco](https://github.com/diyonfinesco)
+
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://prettier.io/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/diyonfinesco/any-pattern/pulls)
+[![Issues](https://img.shields.io/github/issues/diyonfinesco/any-pattern?style=flat-square)](https://github.com/diyonfinesco/any-pattern/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/diyonfinesco/any-pattern?style=flat-square)](https://github.com/diyonfinesco/any-pattern/commits/main)
