@@ -13,10 +13,11 @@ Turn plain terminal output into colourful ASCII art. `any-pattern` ships with ba
 </p>
 
 ## Highlights
-- ready-to-use functions: `anyLog`, `anyShape`, `anyAnimal`, `anyMood`
-- interactive CLI (`npx any-pattern`) with `--list` exploration
-- 16 chalk colours plus banner spacing/scale options
-- works with CommonJS, ESM, and TypeScript projects
+- **print** helpers (`anyLog`, `anyShape`, `anyAnimal`, `anyMood`) **and pure `render*` functions** that return a string — capture it, write it to a file, or embed it anywhere
+- 🌈 **rainbow** gradient colouring in addition to 16 chalk colours
+- banner font with **letters, numbers, and punctuation** (`! ? . , - + = : ' / ( ) < > * #`)
+- interactive CLI (`npx any-pattern`) with `--list`, `--version`, `--rainbow`, and `random` picks
+- works with CommonJS, ESM, and TypeScript projects (strict union types → autocomplete)
 - tree of ASCII assets you can extend or customise
 
 ## After you installed
@@ -47,60 +48,98 @@ npx any-pattern --help
 ```ts
 import { anyLog, anyShape, anyAnimal, anyMood } from 'any-pattern';
 
-anyLog('Hello', 'cyanBright', { char: '#', spacing: 2 });
-anyShape('heart', 'redBright');
+anyLog('Hello!', 'cyanBright', { char: '#', spacing: 2 });
+anyShape('heart', 'rainbow');   // 🌈 gradient
 anyAnimal('cat', 'yellow');
 anyMood('cool', 'blue');
 ```
 
 `Color` is a strict union, so you get autocomplete and type checking in TypeScript-aware editors.
 
+### Capture instead of print
+
+Every `any*` function has a pure `render*` counterpart that **returns a string** and never touches the console — ideal for tests, log files, web output, or composing larger layouts. Pass a colour to embed ANSI codes, or omit it for plain text.
+
+```ts
+import { renderLog, renderShape, renderMood, shapes, moods } from 'any-pattern';
+
+const banner = renderLog('Build OK', { scale: 1 });   // plain string, no colour
+fs.writeFileSync('banner.txt', banner);
+
+const colored = renderShape('star', 'rainbow');        // string with ANSI colour
+process.stdout.write(colored + '\n');
+
+// catalogues are exported for menus / random pickers
+console.log(shapes.length, moods.length);
+```
+
+`render*` throws on an unknown name; the `any*` helpers print a warning instead.
+
 ## CLI Usage
 
 ```bash
-npx any-pattern log "Hello World" --color magentaBright --spacing 1 --scale 2
-npx any-pattern shape heart --color red
-npx any-pattern animal penguin
+npx any-pattern log "v2.0!" --color magentaBright --spacing 1 --scale 2
+npx any-pattern shape heart --rainbow          # 🌈 gradient
+npx any-pattern animal random                  # surprise me
 npx any-pattern mood laughing --color yellowBright
-npx any-pattern --list shapes      # works as global flag
-npx any-pattern list animals       # traditional sub-command
+npx any-pattern --version
+npx any-pattern --list shapes                  # works as global flag
+npx any-pattern list animals                   # traditional sub-command
 ```
 
 ### Supported commands
 - `log <text>` – render banner text (options: `--color`, `--char`, `--spacing`, `--scale`)
-- `shape <name>` – draw a geometric pattern
-- `animal <name>` – print an ASCII critter
-- `mood <name>` – show an emoji-style face
+- `shape <name|random>` – draw a geometric pattern
+- `animal <name|random>` – print an ASCII critter
+- `mood <name|random>` – show an emoji-style face
 - `list <shapes|animals|moods|colors>` – inspect what is bundled (also available via `--list`/`-l`)
 
-Run `any-pattern --help` to see all flags in context.
+### Global flags
+- `--color, -c <color>` – any colour name (default `white`)
+- `--rainbow` – rainbow gradient, overrides `--color`
+- `--version, -v` – print the installed version
+- `--help, -h` – show usage
+
+Pass `random` in place of any shape/animal/mood name to pick one at random. Run `any-pattern --help` to see all flags in context.
 
 ## API Reference
 
-### `anyLog(text, color?, options?)`
-Render banner text using the built-in 5×7 font.
+### Print helpers (write to the console)
 
-- `text` (`string`): content to render (letters, numbers, and space are supported)
-- `color` (`Color`, default `white`): chalk colour name
-- `options`:
-  - `char` (`string`, default `*`): character used for filled pixels
-  - `spacing` (`number`, default `2`): gap between glyphs
-  - `scale` (`number`, default `1`): scales glyph width/height uniformly
+| Function | Returns | Notes |
+| --- | --- | --- |
+| `anyLog(text, color?, options?)` | `void` | Banner text via the built-in 5×7 font |
+| `anyShape(shape, color?)` | `void` | Prints a shape + trailing blank line |
+| `anyAnimal(animal, color?)` | `void` | Prints an animal + trailing blank line |
+| `anyMood(mood?, color?)` | `void` | Emoji-style face (not bolded); defaults to `smiley` |
 
-### `anyShape(shape, color?)`
-Print a shape from the catalogue. Shape names are case-insensitive; see the list below.
+### Pure render functions (return a string)
 
-### `anyAnimal(animal, color?)`
-Render one of the bundled animals.
+| Function | Returns |
+| --- | --- |
+| `renderLog(text, options?, color?)` | `string` |
+| `renderShape(shape, color?)` | `string` |
+| `renderAnimal(animal, color?)` | `string` |
+| `renderMood(mood?, color?)` | `string` |
 
-### `anyMood(mood, color?)`
-Display an emoji-like face. Unlike the other functions the output is not bolded, so it resembles emoticons.
+`render*` functions are side-effect free. Omit the colour for plain text; pass a `ColorOption` to embed ANSI codes. They **throw** on an unknown name.
+
+**`anyLog` / `renderLog` options**
+- `char` (`string`, default `*`): character used for filled pixels
+- `spacing` (`number`, default `2`): gap between glyphs
+- `scale` (`number`, default `1`): scales glyph width/height uniformly
+
+The font covers `A–Z`, `0–9`, space, and punctuation `! ? . , - + = : ' / ( ) < > * #`. Names are case-insensitive.
+
+### Catalogue exports
+
+`shapes`, `animals`, `moods`, and `COLORS` are exported as arrays — handy for building menus or random pickers.
 
 ### Colours
 
-`any-pattern` understands the Chalk v4 palette:
+Any of the Chalk v4 palette, plus the special `rainbow` gradient:
 
-`black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `blackBright`, `gray`, `redBright`, `greenBright`, `yellowBright`, `blueBright`, `magentaBright`, `cyanBright`, `whiteBright`
+`black`, `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`, `blackBright`, `gray`, `redBright`, `greenBright`, `yellowBright`, `blueBright`, `magentaBright`, `cyanBright`, `whiteBright`, `rainbow`
 
 ## Pattern Catalogue
 
@@ -108,7 +147,7 @@ Display an emoji-like face. Unlike the other functions the output is not bolded,
 `arrow`, `arrow down`, `arrow up`, `circle`, `cross`, `diamond`, `downward triangle`, `heart`, `hexagon`, `hollow circle`, `hollow diamond`, `hollow pyramid`, `hollow square`, `hollow triangle`, `hourglass`, `infinity`, `left arrow`, `left triangle`, `octagon`, `oval`, `pentagon`, `plus`, `pyramid`, `reversed pyramid`, `right arrow`, `right triangle`, `square`, `star`, `wave`
 
 ### Animals
-`bat`, `bird`, `cat`, `cow`, `dog`, `duck`, `elephant`, `fish`, `frog`, `horse`, `monkey`, `penguin`, `rabbit`, `scorpion`, `snake`
+`bat`, `bird`, `cat`, `cow`, `dog`, `duck`, `elephant`, `fish`, `frog`, `horse`, `monkey`, `penguin`, `rabbit`, `scorpion`
 
 ### Moods
 `alien`, `angry`, `blushing`, `bored`, `cool`, `confused`, `crying`, `laughing`, `love`, `mad`, `nerd`, `robot`, `sad`, `shocked`, `sleepy`, `smiley`, `surprised`, `surly`, `thinking`, `wink`

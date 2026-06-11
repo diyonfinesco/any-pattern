@@ -1,29 +1,19 @@
-import { anyLog, anyShape, anyAnimal, anyMood, type Color } from './index';
-import { shapePatterns } from './anyShape';
-import { animalPatterns } from './anyAnimal';
-import { moodPatterns } from './anyMood';
+import {
+    anyLog,
+    anyShape,
+    anyAnimal,
+    anyMood,
+    shapes,
+    animals,
+    moods,
+    type ColorOption,
+    type Shape,
+    type Animal,
+    type Mood,
+} from './index';
+import { COLORS, isColorOption } from './colors';
 
 type Command = 'log' | 'shape' | 'animal' | 'mood' | 'list';
-
-const COLORS: Color[] = [
-    'black',
-    'red',
-    'green',
-    'yellow',
-    'blue',
-    'magenta',
-    'cyan',
-    'white',
-    'blackBright',
-    'gray',
-    'redBright',
-    'greenBright',
-    'yellowBright',
-    'blueBright',
-    'magentaBright',
-    'cyanBright',
-    'whiteBright'
-];
 
 interface FlagResult {
     found: boolean;
@@ -33,7 +23,12 @@ interface FlagResult {
 function main(): void {
     const args = process.argv.slice(2);
 
-    if (args.length === 0 || hasHelpFlag(args)) {
+    if (hasFlag(args, '--version', '-v')) {
+        console.log(getVersion());
+        return;
+    }
+
+    if (args.length === 0 || hasFlag(args, '--help', '-h')) {
         printHelp();
         process.exit(args.length === 0 ? 1 : 0);
     }
@@ -70,58 +65,62 @@ function main(): void {
 }
 
 function handleLog(args: string[]): void {
-    if (args.length === 0) {
-        console.error('Please provide text to render.');
-        process.exit(1);
-    }
-
     const color = extractColor(args);
     const char = extractOption(args, '--char');
     const spacing = parseIntegerOption(args, '--spacing');
     const scale = parseIntegerOption(args, '--scale');
     const text = args.join(' ');
 
+    if (!text) {
+        console.error('Please provide text to render.');
+        process.exit(1);
+    }
+
     anyLog(text, color, {
         ...(char ? { char } : {}),
         ...(spacing !== undefined ? { spacing } : {}),
-        ...(scale !== undefined ? { scale } : {})
+        ...(scale !== undefined ? { scale } : {}),
     });
 }
 
 function handleShape(args: string[]): void {
     const color = extractColor(args);
-    const name = args.shift();
-
-    if (!name) {
-        console.error('Please provide a shape name (try "any-pattern list shapes").');
-        process.exit(1);
-    }
-
-    anyShape(name, color);
+    const name = resolveName(args.shift(), shapes, 'shape', 'shapes');
+    anyShape(name as Shape, color);
 }
 
 function handleAnimal(args: string[]): void {
     const color = extractColor(args);
-    const name = args.shift();
-
-    if (!name) {
-        console.error('Please provide an animal name (try "any-pattern list animals").');
-        process.exit(1);
-    }
-
-    anyAnimal(name, color);
+    const name = resolveName(args.shift(), animals, 'animal', 'animals');
+    anyAnimal(name as Animal, color);
 }
 
 function handleMood(args: string[]): void {
     const color = extractColor(args);
-    const name = args.shift();
+    const name = resolveName(args.shift(), moods, 'mood', 'moods');
+    anyMood(name as Mood, color);
+}
 
-    if (!name) {
-        console.error('Please provide a mood name (try "any-pattern list moods").');
+/**
+ * Validates a positional name. Supports the literal `random`, which picks an
+ * entry from the catalogue. Exits with a helpful message when missing.
+ */
+function resolveName(
+    raw: string | undefined,
+    catalogue: string[],
+    kind: string,
+    listKey: string
+): string {
+    if (!raw) {
+        console.error(`Please provide a ${kind} name (try "any-pattern list ${listKey}").`);
         process.exit(1);
     }
 
-    anyMood(name, color);
+    if (raw.toLowerCase() === 'random') {
+        return catalogue[Math.floor(Math.random() * catalogue.length)];
+    }
+
+    return raw;
 }
 
 function handleList(target?: string): void {
@@ -129,16 +128,16 @@ function handleList(target?: string): void {
 
     switch (normalized) {
         case 'shapes':
-            listItems('Shapes', Object.keys(shapePatterns));
+            listItems('Shapes', shapes);
             break;
         case 'animals':
-            listItems('Animals', Object.keys(animalPatterns));
+            listItems('Animals', animals);
             break;
         case 'moods':
-            listItems('Moods', Object.keys(moodPatterns));
+            listItems('Moods', moods);
             break;
         case 'colors':
-            listItems('Colors', COLORS);
+            listItems('Colors', [...COLORS, 'rainbow']);
             break;
         default:
             console.error('Please specify what to list: shapes, animals, moods, or colors.');
@@ -148,16 +147,20 @@ function handleList(target?: string): void {
 
 function listItems(label: string, items: string[]): void {
     console.log(`${label}:`);
-    console.log(items.sort((a, b) => a.localeCompare(b)).join(', '));
+    console.log([...items].sort((a, b) => a.localeCompare(b)).join(', '));
 }
 
-function extractColor(args: string[]): Color {
+function extractColor(args: string[]): ColorOption {
+    if (extractBooleanFlag(args, '--rainbow')) {
+        return 'rainbow';
+    }
+
     const raw = extractOption(args, '--color', '-c');
     if (!raw) {
         return 'white';
     }
 
-    if (!isColor(raw)) {
+    if (!isColorOption(raw)) {
         console.error(`Color "${raw}" is not supported. Try "any-pattern list colors".`);
         process.exit(1);
     }
@@ -181,6 +184,15 @@ function extractOption(args: string[], ...flags: string[]): string | undefined {
     return undefined;
 }
 
+function extractBooleanFlag(args: string[], flag: string): boolean {
+    const index = args.indexOf(flag);
+    if (index === -1) {
+        return false;
+    }
+    args.splice(index, 1);
+    return true;
+}
+
 function parseIntegerOption(args: string[], flag: string): number | undefined {
     const value = extractOption(args, flag);
     if (value === undefined) {
@@ -196,12 +208,12 @@ function parseIntegerOption(args: string[], flag: string): number | undefined {
     return parsed;
 }
 
-function hasHelpFlag(args: string[]): boolean {
-    return args.includes('--help') || args.includes('-h');
+function hasFlag(args: string[], ...flags: string[]): boolean {
+    return flags.some((flag) => args.includes(flag));
 }
 
 function extractListFlag(args: string[]): FlagResult {
-    const index = args.findIndex(arg => arg === '--list' || arg === '-l');
+    const index = args.findIndex((arg) => arg === '--list' || arg === '-l');
     if (index === -1) {
         return { found: false };
     }
@@ -212,14 +224,18 @@ function extractListFlag(args: string[]): FlagResult {
 
     args.splice(index, hasValue ? 2 : 1);
 
-    return {
-        found: true,
-        value
-    };
+    return { found: true, value };
 }
 
-function isColor(value: string): value is Color {
-    return (COLORS as readonly string[]).includes(value);
+function getVersion(): string {
+    try {
+        // package.json lives one level above the bundled dist/cli.js.
+        const path = require('path') as typeof import('path');
+        const pkg = require(path.join(__dirname, '..', 'package.json'));
+        return pkg.version ?? 'unknown';
+    } catch {
+        return 'unknown';
+    }
 }
 
 function printHelp(): void {
@@ -227,24 +243,27 @@ function printHelp(): void {
 
 Commands:
   log <text>            Render ASCII letters using anyLog.
-  shape <name>          Render a shape pattern.
-  animal <name>         Render an animal pattern.
-  mood <name>           Render a mood pattern.
+  shape <name|random>   Render a shape pattern.
+  animal <name|random>  Render an animal pattern.
+  mood <name|random>    Render a mood pattern.
   list <type>           List available shapes, animals, moods, or colors.
 
 Options:
   --color, -c <color>   Set output color (default: white).
+  --rainbow             Render with a rainbow gradient (overrides --color).
   --char <char>         (log) Override the character used in the banner font.
   --spacing <n>         (log) Adjust spacing between letters (default: 2).
   --scale <n>           (log) Scale banner font (default: 1).
   --list, -l <type>     List shapes, animals, moods, or colors from anywhere.
+  --version, -v         Print the installed version.
   --help, -h            Show this message.
 
 Examples:
   any-pattern log "Hello World" --color cyan
+  any-pattern log "v2.0!" --rainbow --scale 2
   any-pattern shape heart --color redBright
-  any-pattern animal cat
-  any-pattern --list shapes
+  any-pattern animal random
+  any-pattern mood cool --rainbow
   any-pattern list shapes`);
 }
 
