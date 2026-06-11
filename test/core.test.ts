@@ -1,102 +1,72 @@
-import stripAnsi from 'strip-ansi';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { anyAnimal, anyLog, anyMood, anyShape } from '../src';
-import { logPatterns } from '../src/anyLog';
+import { describe, it, expect } from 'vitest';
+import chalk from 'chalk';
+import {
+    renderLog,
+    renderShape,
+    renderAnimal,
+    renderMood,
+    shapes,
+    animals,
+    moods,
+} from '../src';
+import { shapePatterns } from '../src/anyShape';
 import { animalPatterns } from '../src/anyAnimal';
 import { moodPatterns } from '../src/anyMood';
-import { shapePatterns } from '../src/anyShape';
 
-describe('any-pattern API', () => {
-    let logs: string[];
-    let warnings: string[];
-
-    beforeEach(() => {
-        logs = [];
-        warnings = [];
-
-        vi.spyOn(console, 'log').mockImplementation((message?: unknown) => {
-            if (message === undefined) {
-                logs.push('');
-                return undefined;
-            }
-
-            logs.push(stripAnsi(String(message)));
-            return undefined;
-        });
-
-        vi.spyOn(console, 'warn').mockImplementation((message?: unknown) => {
-            warnings.push(stripAnsi(String(message ?? '')));
-            return undefined;
-        });
+describe('render API (pure, no side effects)', () => {
+    it('renderLog returns plain capturable output when no color is given', () => {
+        const out = renderLog('Hi', { char: '#', spacing: 1 });
+        expect(out).toContain('#');
+        // no ANSI escape codes when uncolored
+        expect(out).not.toMatch(/\[/);
     });
 
-    afterEach(() => {
-        vi.restoreAllMocks();
+    it('renderLog renders punctuation glyphs', () => {
+        const out = renderLog('A!', { char: '#' });
+        expect(out.split('\n')).toHaveLength(7);
+        expect(out).toContain('#');
     });
 
-    it('renders banner text with default options', () => {
-        anyLog('Hi');
-
-        expect(logs).toHaveLength(1);
-        expect(warnings).toHaveLength(0);
-
-        const expected = logPatterns('hi', { char: '*', spacing: 2, scale: 1 });
-        expect(logs[0]).toBe(expected);
+    it('renderShape returns the raw pattern joined by newlines', () => {
+        expect(renderShape('heart')).toBe(shapePatterns['heart'].join('\n'));
     });
 
-    it('respects custom log rendering options', () => {
-        anyLog('Aa', 'green', { char: '#', spacing: 1, scale: 1 });
-
-        const expected = logPatterns('aa', { char: '#', spacing: 1, scale: 1 });
-        expect(logs[0]).toBe(expected);
+    it('renderShape is case-insensitive', () => {
+        expect(renderShape('HEART' as never)).toBe(shapePatterns['heart'].join('\n'));
     });
 
-    it('prints known shapes and adds a trailing blank line', () => {
-        anyShape('heart', 'yellow');
-
-        const pattern = shapePatterns['heart'];
-        expect(pattern).toBeDefined();
-
-        expect(logs.slice(0, pattern!.length)).toEqual(pattern);
-        expect(logs[pattern!.length]).toBe('');
-        expect(warnings).toHaveLength(0);
+    it('renderShape throws on unknown shape', () => {
+        expect(() => renderShape('nope' as never)).toThrow(/not found/);
     });
 
-    it('warns when a shape is missing', () => {
-        anyShape('non-existent-shape', 'cyan');
-
-        expect(warnings).toContain('⚠️ Shape "non-existent-shape" not found.');
+    it('renderMood defaults to smiley', () => {
+        expect(renderMood()).toBe(moodPatterns['smiley'].join('\n'));
     });
 
-    it('prints animals and appends a blank separator line', () => {
-        anyAnimal('cat', 'magenta');
+    it('rainbow output differs from a flat color (colors forced on)', () => {
+        const prev = chalk.level;
+        chalk.level = 3; // force ANSI even in a non-TTY test runner
+        try {
+            const flat = renderShape('diamond', 'red');
+            const rainbow = renderShape('diamond', 'rainbow');
+            expect(rainbow).not.toBe(flat);
+            expect(rainbow).toMatch(/\[/);
+        } finally {
+            chalk.level = prev;
+        }
+    });
+});
 
-        const pattern = animalPatterns['cat'];
-        expect(pattern).toBeDefined();
-
-        expect(logs.slice(0, pattern!.length)).toEqual(pattern);
-        expect(logs[pattern!.length]).toBe('');
+describe('catalogue / type consistency', () => {
+    it('exposes every shape, animal, and mood key', () => {
+        expect([...shapes].sort()).toEqual(Object.keys(shapePatterns).sort());
+        expect([...animals].sort()).toEqual(Object.keys(animalPatterns).sort());
+        expect([...moods].sort()).toEqual(Object.keys(moodPatterns).sort());
     });
 
-    it('warns when an animal is missing', () => {
-        anyAnimal('dragon', 'red');
-
-        expect(warnings).toContain('⚠️ Animal "dragon" not found.');
-    });
-
-    it('prints moods without appending a blank line', () => {
-        anyMood('smiley', 'blue');
-
-        const pattern = moodPatterns['smiley'];
-        expect(pattern).toBeDefined();
-
-        expect(logs).toEqual(pattern);
-        expect(warnings).toHaveLength(0);
-    });
-
-    it('warns when a mood is missing', () => {
-        anyMood('grumpy', 'blue');
-
-        expect(warnings).toContain('⚠️ Mood "grumpy" not found.');
+    it('every catalogued entry renders without throwing', () => {
+        for (const s of shapes) expect(() => renderShape(s)).not.toThrow();
+        for (const a of animals) expect(() => renderAnimal(a)).not.toThrow();
+        for (const m of moods) expect(() => renderMood(m)).not.toThrow();
     });
 });

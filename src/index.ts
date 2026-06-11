@@ -1,31 +1,21 @@
-import chalk from "chalk";
 import { moodPatterns } from "./anyMood";
 import { logPatterns } from "./anyLog";
 import { shapePatterns } from "./anyShape";
 import { animalPatterns } from "./anyAnimal";
+import {
+    Color,
+    ColorOption,
+    COLORS,
+    DEFAULT_COLOR,
+    styleLines,
+} from "./colors";
 
 /* ======================
  * Types
  * ====================== */
 
-export type Color =
-    | "black"
-    | "red"
-    | "green"
-    | "yellow"
-    | "blue"
-    | "magenta"
-    | "cyan"
-    | "white"
-    | "blackBright"
-    | "gray"
-    | "redBright"
-    | "greenBright"
-    | "yellowBright"
-    | "blueBright"
-    | "magentaBright"
-    | "cyanBright"
-    | "whiteBright";
+export type { Color, ColorOption };
+export { COLORS };
 
 export type Shape =
     | "arrow"
@@ -45,6 +35,7 @@ export type Shape =
     | "hourglass"
     | "infinity"
     | "left arrow"
+    | "left triangle"
     | "octagon"
     | "oval"
     | "pentagon"
@@ -100,46 +91,27 @@ export type Mood =
  * ====================== */
 
 type PatternMap = Record<string, string[]>;
-type ChalkFn = (str: string) => string;
 
-const DEFAULT_COLOR: Color = "white";
+export interface LogOptions {
+    /** Character used for filled pixels (default: `*`). */
+    char?: string;
+    /** Gap between glyphs (default: `2`). */
+    spacing?: number;
+    /** Uniformly scales glyph width/height (default: `1`). */
+    scale?: number;
+}
 
-const DEFAULT_LOG_OPTIONS = {
+const DEFAULT_LOG_OPTIONS: Required<LogOptions> = {
     char: "*",
     spacing: 2,
     scale: 1,
-} as const;
-
-export type LogOptions = Partial<typeof DEFAULT_LOG_OPTIONS>;
+};
 
 function normalizeKey(input: string): string {
     return input.toLowerCase().trim();
 }
 
-function resolveColorFn(color: Color = DEFAULT_COLOR): ChalkFn {
-    const fn = (chalk as any)[color];
-    return typeof fn === "function" ? (fn as ChalkFn) : chalk.white;
-}
-
-function printLines(
-    content: string[] | string,
-    color: Color = DEFAULT_COLOR,
-    { bold = true }: { bold?: boolean } = {}
-): void {
-    const colorFn = resolveColorFn(color);
-    const stylize = bold ? (s: string) => colorFn(chalk.bold(s)) : colorFn;
-
-    if (Array.isArray(content)) {
-        content.forEach((line) => console.log(stylize(line)));
-    } else {
-        console.log(stylize(content));
-    }
-}
-
-function getPattern(
-    map: PatternMap,
-    key: string
-): string[] | undefined {
+function getPattern(map: PatternMap, key: string): string[] | undefined {
     return map[normalizeKey(key)];
 }
 
@@ -147,31 +119,85 @@ function warn(kind: string, value: string): void {
     console.warn(`⚠️ ${kind} "${value}" not found.`);
 }
 
+/** Catalogue helpers — handy for building menus, docs, or random pickers. */
+export const shapes = Object.keys(shapePatterns) as Shape[];
+export const animals = Object.keys(animalPatterns) as Animal[];
+export const moods = Object.keys(moodPatterns) as Mood[];
+
 /* ======================
- * Public API
+ * Render API (returns strings — capturable, no side effects)
  * ====================== */
 
 /**
- * Prints text as a sequence of character patterns.
+ * Build a banner string from `text` without printing it.
+ * @param text The string to render.
+ * @param options Rendering options (char, spacing, scale).
+ * @param color Optional color/rainbow. Omit for plain, capturable output.
+ */
+export function renderLog(
+    text: string,
+    options: LogOptions = {},
+    color?: ColorOption
+): string {
+    const cfg = { ...DEFAULT_LOG_OPTIONS, ...options };
+    const raw = logPatterns(text.toLowerCase(), cfg) as string;
+    return styleLines(raw.split("\n"), color, { bold: Boolean(color) }).join("\n");
+}
+
+/**
+ * Build a shape string without printing it.
+ * @throws If the shape name is unknown.
+ */
+export function renderShape(shape: Shape, color?: ColorOption): string {
+    const pattern = getPattern(shapePatterns, shape);
+    if (!pattern) {
+        throw new Error(`Shape "${shape}" not found.`);
+    }
+    return styleLines(pattern, color, { bold: Boolean(color) }).join("\n");
+}
+
+/**
+ * Build an animal string without printing it.
+ * @throws If the animal name is unknown.
+ */
+export function renderAnimal(animal: Animal, color?: ColorOption): string {
+    const pattern = getPattern(animalPatterns, animal);
+    if (!pattern) {
+        throw new Error(`Animal "${animal}" not found.`);
+    }
+    return styleLines(pattern, color, { bold: Boolean(color) }).join("\n");
+}
+
+/**
+ * Build a mood string without printing it.
+ * @throws If the mood name is unknown.
+ */
+export function renderMood(mood: Mood = "smiley", color?: ColorOption): string {
+    const pattern = getPattern(moodPatterns, mood);
+    if (!pattern) {
+        throw new Error(`Mood "${mood}" not found.`);
+    }
+    return styleLines(pattern, color, { bold: false }).join("\n");
+}
+
+/* ======================
+ * Print API (renders to the console)
+ * ====================== */
+
+/**
+ * Prints text as a banner of character patterns.
  * @param text The string to print.
- * @param color The color to use (default: white).
+ * @param color The color to use (default: white). Pass `"rainbow"` for a gradient.
  * @param options Optional rendering options for the log pattern.
  */
 export function anyLog(
     text: string,
-    color: Color = DEFAULT_COLOR,
+    color: ColorOption = DEFAULT_COLOR,
     options: LogOptions = {}
 ): void {
     try {
-        const cfg = { ...DEFAULT_LOG_OPTIONS, ...options };
-        const output = logPatterns(text.toLowerCase(), cfg) as string | undefined;
-
-        if (output) {
-            printLines(output, color, { bold: true });
-        } else {
-            console.warn(`Something went wrong rendering the text "${text}".`);
-        }
-    } catch (err) {
+        console.log(renderLog(text, options, color));
+    } catch {
         console.warn(`Something went wrong rendering the text "${text}".`);
     }
 }
@@ -179,14 +205,11 @@ export function anyLog(
 /**
  * Renders a geometric shape pattern.
  */
-export function anyShape(shape: Shape, color: Color = DEFAULT_COLOR): void {
-    const map = shapePatterns as unknown as PatternMap;
-    const pattern = getPattern(map, shape);
-
-    if (pattern) {
-        printLines(pattern, color, { bold: true });
+export function anyShape(shape: Shape, color: ColorOption = DEFAULT_COLOR): void {
+    try {
+        console.log(renderShape(shape, color));
         console.log();
-    } else {
+    } catch {
         warn("Shape", shape);
     }
 }
@@ -194,14 +217,11 @@ export function anyShape(shape: Shape, color: Color = DEFAULT_COLOR): void {
 /**
  * Renders an animal pattern.
  */
-export function anyAnimal(animal: Animal, color: Color = DEFAULT_COLOR): void {
-    const map = animalPatterns as unknown as PatternMap;
-    const pattern = getPattern(map, animal);
-
-    if (pattern) {
-        printLines(pattern, color, { bold: true });
+export function anyAnimal(animal: Animal, color: ColorOption = DEFAULT_COLOR): void {
+    try {
+        console.log(renderAnimal(animal, color));
         console.log();
-    } else {
+    } catch {
         warn("Animal", animal);
     }
 }
@@ -209,14 +229,10 @@ export function anyAnimal(animal: Animal, color: Color = DEFAULT_COLOR): void {
 /**
  * Renders a mood (emoji-like) pattern.
  */
-export function anyMood(mood: Mood, color: Color = DEFAULT_COLOR): void {
-    const map = moodPatterns as unknown as PatternMap;
-    const pattern = getPattern(map, mood);
-
-    if (!pattern) {
+export function anyMood(mood: Mood = "smiley", color: ColorOption = DEFAULT_COLOR): void {
+    try {
+        console.log(renderMood(mood, color));
+    } catch {
         warn("Mood", mood);
-        return;
     }
-
-    printLines(pattern, color, { bold: false });
 }

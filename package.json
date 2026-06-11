@@ -1,6 +1,6 @@
 {
   "name": "any-pattern",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,9 +16,11 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
-  "prepublishOnly": "npm run build",
   "dependencies": {
     "chalk": "^4.1.2"
   },
@@ -41,6 +43,9 @@
     "fun",
     "pattern",
     "color",
+    "rainbow",
+    "ansi",
+    "figlet",
     "typescript"
   ],
   "license": "MIT"

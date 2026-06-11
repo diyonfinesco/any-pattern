@@ -6,3 +6,6 @@
 
 # Build files
 /dist
+
+# Local example sandbox (not published, not tracked)
+/examples

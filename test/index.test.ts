@@ -1,83 +1,92 @@
 import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import stripAnsi from 'strip-ansi';
-import { anyLog, anyShape, anyAnimal, anyMood } from '../src/index';
-import { logPatterns } from '../src/anyLog';
+import {
+    anyLog,
+    anyShape,
+    anyAnimal,
+    anyMood,
+    renderLog,
+    renderShape,
+} from '../src/index';
 import { shapePatterns } from '../src/anyShape';
 import { animalPatterns } from '../src/anyAnimal';
 import { moodPatterns } from '../src/anyMood';
 
-describe('any-pattern exports', () => {
-    const logs: string[] = [];
-    const warns: string[] = [];
+describe('print API', () => {
+    let logs: string[];
+    let warns: string[];
 
     beforeEach(() => {
-        vi.spyOn(console, 'log').mockImplementation((...args: unknown[]) => {
-            if (args.length === 0) {
-                logs.push('');
-                return undefined;
-            }
+        logs = [];
+        warns = [];
 
-            const [first] = args;
-            logs.push(stripAnsi(String(first ?? '')));
+        vi.spyOn(console, 'log').mockImplementation((message?: unknown) => {
+            logs.push(message === undefined ? '' : stripAnsi(String(message)));
             return undefined;
         });
 
-        vi.spyOn(console, 'warn').mockImplementation((...args: unknown[]) => {
-            const [first] = args;
-            warns.push(stripAnsi(String(first ?? '')));
+        vi.spyOn(console, 'warn').mockImplementation((message?: unknown) => {
+            warns.push(stripAnsi(String(message ?? '')));
             return undefined;
         });
     });
 
     afterEach(() => {
-        logs.length = 0;
-        warns.length = 0;
         vi.restoreAllMocks();
     });
 
-    it('renders log banner output via anyLog', () => {
-        const expected = logPatterns('Hi', { char: '#', spacing: 1, scale: 1 });
-
+    it('anyLog prints a single banner block', () => {
         anyLog('Hi', 'cyan', { char: '#', spacing: 1, scale: 1 });
 
         expect(logs).toHaveLength(1);
-        expect(logs[0]).toBe(expected);
+        expect(logs[0]).toBe(renderLog('Hi', { char: '#', spacing: 1, scale: 1 }));
     });
 
-    it('renders a known shape pattern and appends a blank line', () => {
-        const heart = shapePatterns['heart'];
+    it('anyShape prints the pattern then a trailing blank line', () => {
+        anyShape('heart', 'yellow');
 
-        anyShape('heart', 'magentaBright');
-
-        expect(logs.slice(0, heart.length)).toEqual(heart);
-        expect(logs[heart.length]).toBe('');
+        expect(logs[0]).toBe(renderShape('heart'));
+        expect(logs[1]).toBe('');
+        expect(warns).toHaveLength(0);
     });
 
-    it('warns when a shape is missing', () => {
-        anyShape('not-a-shape' as never, 'red');
-
-        expect(warns).toContain('⚠️ Shape "not-a-shape" not found.');
+    it('anyShape warns on unknown shape', () => {
+        anyShape('non-existent-shape' as never, 'cyan');
+        expect(warns).toContain('⚠️ Shape "non-existent-shape" not found.');
     });
 
-    it('renders an animal pattern', () => {
-        const cat = animalPatterns['cat'];
+    it('anyAnimal prints the pattern then a trailing blank line', () => {
+        anyAnimal('cat', 'magenta');
 
-        anyAnimal('cat', 'yellow');
-
-        expect(logs.slice(0, cat.length)).toEqual(cat);
+        expect(logs[0]).toBe(animalPatterns['cat'].join('\n'));
+        expect(logs[1]).toBe('');
     });
 
-    it('renders a mood pattern without bold formatting', () => {
-        const cool = moodPatterns['cool'];
-
-        anyMood('cool', 'blue');
-
-        expect(logs).toEqual(cool);
+    it('anyAnimal warns on unknown animal', () => {
+        anyAnimal('dragon' as never, 'red');
+        expect(warns).toContain('⚠️ Animal "dragon" not found.');
     });
 
-    it('warns when a mood is missing', () => {
-        anyMood('grumpy' as never, 'green');
+    it('anyMood prints without a trailing blank line', () => {
+        anyMood('smiley', 'blue');
 
+        expect(logs).toEqual([moodPatterns['smiley'].join('\n')]);
+        expect(warns).toHaveLength(0);
+    });
+
+    it('anyMood defaults to smiley when called with no name', () => {
+        anyMood();
+        expect(logs).toEqual([moodPatterns['smiley'].join('\n')]);
+    });
+
+    it('anyMood warns on unknown mood', () => {
+        anyMood('grumpy' as never, 'blue');
         expect(warns).toContain('⚠️ Mood "grumpy" not found.');
+    });
+
+    it('rainbow color renders without warning', () => {
+        anyShape('star', 'rainbow');
+        expect(warns).toHaveLength(0);
+        expect(logs[0]).toBe(shapePatterns['star'].join('\n'));
     });
 });
