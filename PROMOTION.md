@@ -41,14 +41,10 @@ Suggested entry line:
 - [any-pattern](https://github.com/diyonfinesco/any-pattern) - Colorful ASCII art banners, shapes, animals & moods for your terminal. CLI + TypeScript API.
 ```
 
-## 5. Demo GIF
-
-Record `npx any-pattern` in action (banner + `shape --rainbow` + a `mood`), export as GIF, upload via a GitHub issue/PR comment to get a persistent `user-attachments` URL, then replace the placeholder in `ReadMe.md` (see the `TODO(demo gif)` comment there).
-
-## 6. Off-repo (your accounts)
+## 5. Off-repo (your accounts)
 
 Not in this repo, but highest-spike potential — post from your own accounts:
 
 - **Show HN** — hook: zero-config ASCII art toolkit, rainbow gradient renderer, CLI + pure render API.
-- **r/node**, **r/commandline** — short demo GIF + one-line pitch.
+- **r/node**, **r/commandline** — screenshot + one-line pitch.
 - **dev.to** — a "figlet vs any-pattern" comparison post ranks well and drives curiosity clicks.
