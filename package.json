@@ -5,14 +5,14 @@
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "bin": {
-    "any-pattern": "./dist/cli.js"
+    "any-pattern": "dist/cli.js"
   },
   "files": [
     "dist"
   ],
   "description": "Print anything on terminal",
   "repository": {
-    "url": "https://github.com/diyonfinesco/any-pattern"
+    "url": "git+https://github.com/diyonfinesco/any-pattern.git"
   },
   "scripts": {
     "build": "tsup",
