@@ -10,7 +10,7 @@
   "files": [
     "dist"
   ],
-  "description": "Print anything on terminal",
+  "description": "Colorful ASCII art banners, shapes, animals & moods for your terminal — CLI + TypeScript API",
   "repository": {
     "url": "git+https://github.com/diyonfinesco/any-pattern.git"
   },
@@ -35,17 +35,26 @@
   },
   "keywords": [
     "ascii-art",
+    "ascii",
     "cli",
     "terminal",
+    "console",
+    "stdout",
     "banner",
     "text-art",
+    "text-to-ascii",
     "nodejs",
+    "npx",
     "fun",
     "pattern",
+    "shapes",
+    "animals",
+    "emoji",
     "color",
     "rainbow",
     "ansi",
     "figlet",
+    "figlet-alternative",
     "typescript"
   ],
   "license": "MIT"

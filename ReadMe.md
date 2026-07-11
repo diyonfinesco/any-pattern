@@ -8,6 +8,14 @@
 
 Turn plain terminal output into colourful ASCII art. `any-pattern` ships with banners, shapes, animals, and moods that you can render from code **or** directly from the command line.
 
+A modern, typed take on the `figlet`/`cowsay` niche — with rainbow gradients, shapes, animals, moods, and a pure `render*` API alongside the printing helpers.
+
+**Try it now — no install:**
+
+```bash
+npx any-pattern shape heart --rainbow
+```
+
 <p align="center">
   <img width="600" height="200" alt="logo" src="https://github.com/user-attachments/assets/87361a67-31db-47bb-9acc-2d9030427608" />
 </p>
@@ -20,7 +28,19 @@ Turn plain terminal output into colourful ASCII art. `any-pattern` ships with ba
 - works with CommonJS, ESM, and TypeScript projects (strict union types → autocomplete)
 - tree of ASCII assets you can extend or customise
 
-## After you installed
+## Demo
+
+<!--
+TODO(demo gif): record a short terminal session (e.g. `npx any-pattern shape heart --rainbow`,
+then an `anyLog` banner and a `mood`), export as a GIF, upload it to a GitHub issue/PR comment
+to get a persistent user-attachments URL, and replace the placeholder src below.
+An autoplaying GIF at the top of the README converts far better than static screenshots.
+-->
+<p align="center">
+  <img width="600" alt="any-pattern demo" src="https://via.placeholder.com/600x300?text=Record+a+demo+GIF+and+drop+the+URL+here" />
+</p>
+
+### Screenshots
 
 <img width="787" height="894" alt="Screenshot 2025-11-04 at 11 34 42" src="https://github.com/user-attachments/assets/5b6bb32c-db9d-411f-854d-653b5f8120b8" />
 
